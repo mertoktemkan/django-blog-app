@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-10 offset-md-1">
+      <h3>Makaleler</h3>
+      <hr>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-10 offset-md-1">
+      <form>
+        {% csrf_token %}
+        <input type="text" name="keyword" class="form-control" placeholder="Makale Ara"/>
+        <button type="submit" class="btn btn-primary btn-sm" style="margin-top:10px;">Ara</button>
+      </form>
+  </div>
+</div>
+
+{% if articles %}
+<div class="row">
+  <div class="col-md-10 offset-md-1">
+    <table style="margin-top: 20px;" class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Başlık</th>
+          <th scope="col">Yazar</th>
+          <th scope="col">Oluşturulma Tarihi</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for article in articles %}
+      <tr>
+          <th scope="row">{{article.id}}</th>
+          <td>
+            <a href="{% url 'article:detail' article.id %}"><strong>{{article.title}}</strong></a><br>
+            {{article.content|safe|truncatewords:20}}
+            <a href="{% url 'article:detail' article.id %}">Devamını Oku</a>
+          </td>
+          <td>{{article.author.username}}</td>
+          <td>{{article.created_time}}</td>
+      </tr>
+      </tbody>
+      {% endfor %}
+  </table>
+  </div>
+</div>
+
+
+
+{% else %}
+<div class="alert alert-danger">Makale Bulunmuyor!</div>
+{% endif %}
+
+
+{% endblock %}
